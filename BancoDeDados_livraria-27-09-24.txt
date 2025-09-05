@@ -1,0 +1,185 @@
+CREATE DATABASE livraria;
+USE Livraria;
+CREATE TABLE pedido(
+id_pedido INT NOT NULL AUTO_INCREMENT,
+quantidade_pedido VARCHAR(45) NOT NULL,
+PRIMARY KEY(id_pedido)
+);
+CREATE TABLE cliente(
+id_cliente INT NOT NULL AUTO_INCREMENT,
+nome_cliente VARCHAR(45) NOT NULL,
+rg_cliente BIGINT(9) NOT NULL,
+cpf_cliente BIGINT(11) NOT NULL,
+rua VARCHAR(45) NOT NULL,
+numero_endereco INT NOT NULL,
+bairro VARCHAR(45) NOT NULL,
+cep INT NOT NULL,
+PRIMARY KEY(id_cliente)
+);
+CREATE TABLE livro(
+id_livro INT NOT NULL AUTO_INCREMENT,
+isbn_livro BIGINT(14) NOT NULL,
+titulo_livro VARCHAR(45) NOT NULL,
+preco_livro DECIMAL(8,2) NOT NULL,
+categoria_livro VARCHAR(45) NOT NULL,
+PRIMARY KEY(id_livro)
+);
+CREATE TABLE editora(
+id_editora INT NOT NULL AUTO_INCREMENT,
+nomeFantasia_editora VARCHAR(45) NOT NULL,
+razaoSocial_editora VARCHAR(45) NOT NULL,
+rua VARCHAR(45) NOT NULL,
+numero_endereco_editora INT NOT NULL,
+bairro VARCHAR(45) NOT NULL,
+cep INT NOT NULL,
+PRIMARY KEY(id_editora)
+);
+CREATE TABLE autor(
+id_autor INT NOT NULL AUTO_INCREMENT,
+nome_autor VARCHAR(45) NOT NULL,
+rg_autor BIGINT(9) NOT NULL,
+PRIMARY KEY(id_autor)
+);
+CREATE TABLE financiador(
+id_financiador INT NOT NULL AUTO_INCREMENT,
+nome_financiador VARCHAR(45) NOT NULL,
+PRIMARY KEY(id_financiador)
+);
+ALTER TABLE livro
+ADD COLUMN id_editora INT,
+ADD FOREIGN KEY (id_editora)
+REFERENCES editora(id_editora);
+
+ALTER TABLE livro
+ADD COLUMN id_financiador INT,
+ADD FOREIGN KEY (id_financiador)
+REFERENCES financiador(id_financiador);
+
+ALTER TABLE livro
+ADD COLUMN id_autor INT,
+ADD FOREIGN KEY (id_autor)
+REFERENCES autor(id_autor);
+
+ALTER TABLE telefone
+ADD COLUMN id_editora INT,
+ADD FOREIGN KEY (id_editora)
+REFERENCES editora(id_editora);
+
+ALTER TABLE pedido
+ADD COLUMN id_cliente INT,
+ADD FOREIGN KEY (id_cliente)
+REFERENCES cliente(id_cliente);
+
+ALTER TABLE pedido
+ADD COLUMN id_livro INT,
+ADD FOREIGN KEY (id_livro)
+REFERENCES livro(id_livro);
+
+USE livraria;
+INSERT INTO autor
+(id_autor, nome_autor, rg_autor)
+VALUES
+('1','Maria josefa','5544333'),
+('2','Lucas Mor','2332112'),
+('3','Mirta Pol','8999536'),
+('4','Patricia Gonzales','4564532'),
+('5','Marcos Ramirez','7678548');
+
+SELECT * FROM autor;
+
+INSERT INTO cliente
+(id_cliente,nome_cliente, rg_cliente, cpf_cliente, rua, numero_endereco, bairro, cep)
+VALUES
+('1', 'Agustin Emnuel Fernandez', '654567687', '65567654879', 'Gilson da costa Javier', '124', 'Smbaqui', '88051200'),
+('2', 'Rocio Marisol sanchez', '980789786', '98908795432', 'Rua das Moreias', '1234', 'Jurere', '88045654'),
+('3', 'Paula Korina', '563232123', '34325676565', 'Rua tortuliano', '34', 'Canasvieiras', '88234300'),
+('4', 'Agustina Castanho', '565434564', '87890989099', 'Rua GUGU', '345', 'Santo antonio de lisboa', '88342000'),
+('5', 'Victoria Ricci', '657890987', '78767890654', 'Paulo Coelho', '444', 'Vargen Grande', '88908999');
+
+SELECT * FROM cliente;
+
+INSERT INTO editora
+(id_editora, nomeFantasia_editora, razaoSocial_editora, rua, numero_endereco_editora, bairro, cep)
+VALUES
+('1', 'Escaravalho Dourado', 'Marylim', 'Edgar Allan Poe', '444', 'Centro', '88900000'),
+('2', 'Tres dialogos', 'Morgue', 'Michael Jackson', '345', 'Centro', '88454367'),
+('3', 'Chocolate com pimenta', 'Globe', '15 de setembro', '367', 'Carvoeira', '88907654'),
+('4', 'Lluvia Seca', 'PortuguezAl', 'Tortuliano Brito', '987', 'Sao Juse', '88453211'),
+('5', 'Soles', 'Y soles Lloveran', 'Rau Paulo Gustavo', '987', 'Ingleses', '88569000');
+
+SELECT * FROM editora;
+
+INSERT INTO financiador
+(id_financiador, nome_financiador, cnpj_financiador)
+VALUES
+('1', 'Ricardo Castellar de Faria', '22267667000198'),
+('2','Maria Cristina Frias', '02554885000178'),
+('3', 'João Annes Guimarães', '33458658000176'),
+('4', 'Consuelo Andrade de Araújo', '01254789000177'),
+('5', 'José Mario Caprioli dos Santos', '05789698000198');
+
+SELECT * FROM editora;
+
+INSERT INTO financiador
+(id_financiador, nome_financiador, cnpj_financiador)
+VALUES
+('1', 'Leticia Gonzales', '45434567890987'),
+('2','Rut Fernandez', '45765432123432'),
+('3', 'Fernando Ruben', '23234323434455'),
+('4', 'Federico Castanho', '54545678900000'),
+('5', 'Ilda dos santos', '09890000989876');
+
+SELECT * FROM editora;
+
+INSERT INTO livro 
+(id_livro, isbn_livro, titulo_livro, preco_livro, categoria_livro, id_editora, id_financiador, id_autor)
+VALUES
+('1', '3434567890980', 'Thomas Green Morton', '58,.90', 'comedia', '1', '2', '3'),
+('2', '5654567877656', 'O Calis', '90.00', 'Drama', '4', '5', '1'),
+('3', '6567876545678', 'Rio Negro', '89.00', 'Terror', '2', '3', '4'),
+('4', '7676333434565', 'Cem anos de comunismo ', '100.00', 'Drama', '5', '1', '2'),
+('5', '5656789800000', 'Ahistoria é uma farça', '172.00', 'Drama', '3', '4', '5');
+
+SELECT * FROM livro;
+
+INSERT INTO pedido
+(id_pedido, qtd_pedido, id_cliente)
+VALUES
+('2', '4', '4'),
+('4', '5', '5'),
+('3', '3', '4'),
+('4', '2', '5'),
+('5', '7', '3');
+
+SELECT * FROM pedido;
+
+INSERT INTO telefone
+(id_telefone, numero_telefone, id_editora)
+VALUES
+('1', '48985674657', '2'),
+('2', '48985432323', '3'),
+('3', '48988909890', '1'),
+('4', '48984546576', '4'),
+('5', '48985656789', '5'),
+('6', '48985657876', '1');
+
+SELECT * FROM telefone
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
