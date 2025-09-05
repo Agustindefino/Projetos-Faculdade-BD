@@ -1,0 +1,97 @@
+
+CREATE DATABASE EstacionamentoDB;
+USE EstacionamentoDB;
+
+-- Tabela cliente
+CREATE TABLE cliente (
+id_cliente INT NOT NULL AUTO_INCREMENT,
+nome VARCHAR(45),
+dt_Nascimento DATE,
+PRIMARY KEY (id_cliente)
+);
+
+-- Tabela categoria
+CREATE TABLE categoria (
+id_categoria INT NOT NULL AUTO_INCREMENT,
+nome VARCHAR(45),
+descricao VARCHAR(45),
+PRIMARY KEY (id_categoria)
+);
+
+-- Tabela veiculo
+CREATE TABLE veiculo (
+id_veiculo INT NOT NULL AUTO_INCREMENT,
+placa VARCHAR(45),
+cor VARCHAR(45),
+cliente_id INT,                     
+categoria_id INT,
+PRIMARY KEY (id_veiculo)
+);
+
+-- Tabela estacionamento
+CREATE TABLE estacionamento (
+id_estacionamento INT NOT NULL AUTO_INCREMENT,
+nome VARCHAR(45),
+capacidade INT,
+Dt_entrada DATE,
+Dt_saida DATE,
+Hs_entrada TIME,
+Hs_saida TIME,
+veiculo_id INT,
+PRIMARY KEY (id_estacionamento)
+);
+
+ALTER TABLE veiculo
+ADD FOREIGN KEY (cliente_id)
+REFERENCES cliente(id_cliente);
+
+ALTER TABLE veiculo
+ADD FOREIGN KEY (categoria_id)
+REFERENCES categoria(id_categoria);
+
+ALTER TABLE estacionamento
+ADD FOREIGN KEY (veiculo_id)
+REFERENCES veiculo(id_veiculo);
+
+INSERT INTO cliente (id_cliente, nome, dt_Nascimento) 
+VALUES
+(1, 'Carlos Silva', '1985-03-15'),
+(2, 'Maria Oliveira', '1990-07-22'),
+(3, 'João Souza', '1978-11-05');
+
+INSERT INTO categoria (id_categoria, nome, descricao) 
+VALUES
+(1, 'Utilitário', 'Veículo de transporte geral'),
+(2, 'Van', 'Veículo de transporte de passageiros'),
+(3, 'Pick-up', 'Veículo com carroceria aberta');
+
+INSERT INTO veiculo (id_veiculo, placa, cor, cliente_id_cliente, categoria_idcategoria)
+ VALUES
+(1, 'ABC1234', 'Branco', 1, 1),
+(2, 'DEF5678', 'Preto', 2, 2),
+(3, 'GHI9012', 'Azul', 3, 3),
+(4, 'JKL3456', 'Vermelho', 1, 2),
+(5, 'MNO7890', 'Cinza', 2, 1);
+
+INSERT INTO estacionamento (id_estacionamento, nome, capacidade, Dt_entrada, Dt_saida, Hs_entrada, Hs_saida, veiculo_idveiculo) 
+VALUES
+(1, 'Estacionamento A', '100 vagas', '2024-10-25', '2024-10-25', '08:00:00', '12:00:00', 1),
+(2, 'Estacionamento B', '200 vagas', '2024-10-26', '2024-10-26', '09:30:00', '14:30:00', 2),
+(3, 'Estacionamento C', '150 vagas', '2024-10-27', '2024-10-27', '10:00:00', '15:00:00', 3);
+
+SELECT * FROM cliente;
+SELECT * FROM categoria;
+SELECT * FROM veiculo;
+
+-- Realizando um INNER JOIN entre as tabelas veiculo, categoria e cliente
+
+SELECT 
+    veiculo.id_veiculo, placa, cor,
+    cliente.nome AS nome_cliente,
+    categoria.nome AS nome_categoria
+FROM 
+    veiculo
+INNER JOIN 
+    cliente ON veiculo.cliente_id = cliente.id_cliente
+INNER JOIN 
+    categoria ON veiculo.categoria_id = categoria.id_categoria;
