@@ -1,0 +1,51 @@
+ CREATE DATABASE regra_constraint;
+
+CREATE TABLE usuario(
+id_cliente INT AUTO_INCREMENT,
+nome VARCHAR (50) NOT NULL,
+cpf BIGINT UNIQUE,
+pais VARCHAR (50) DEFAULT 'Brasil',
+graduado ENUM('sim','nao'),
+num_filhos INT,
+CHECK (num_filhos >=0),
+PRIMARY KEY(id_cliente)
+);
+
+SELECT * FROM usuario;
+
+
+/*testando CONSTRAIN UNIQUE */
+
+INSERT INTO usuario /*você verifica se o banco de dados impede a inserção de valores duplicados em uma coluna */
+(nome ,cpf, pais, graduado, num_filhos)
+VALUES
+('Agustin', 05968543323, 'Argentina', 'sim', 0);
+
+INSERT INTO usuario
+(nome ,cpf, pais, graduado, num_filhos)
+VALUES
+('Maria', 05968543323, 'Argentina', 'sim', 0);
+
+/*testando NOT NULL */
+INSERT INTO usuario
+(nome ,cpf, pais, graduado, num_filhos)
+VALUES
+( 01232443223, 'Brasil','não',1);
+
+/*TESTANDO CONSTRAIN DEFAULT*/ 
+INSERT INTO usuario /* atribui automaticamente um valor padrão a uma coluna quando nenhum valor é fornecido durante a inserção de um novo registro.*/
+(nome, cpf, graduado, num_filhos)
+VALUES 
+('Antonela', 3434345434, 'não', 5);
+
+/*TESTANDO CONSTRAIN 'ENUM' */
+INSERT INTO usuario /*pode aceitar apenas os valores especificados, e qualquer outro valor fora dessa lista será rejeitado.*/
+(nome ,cpf, pais, graduado, num_filhos)
+VALUES
+( 'marcia',01232443223, 'Brasil','cursando',1);
+
+/*TESTANDO CONSTRAIN 'CHECK' */
+INSERT INTO usuario /* impõe regras para garantir que os valores em uma coluna atendam a uma condição específica*/
+(nome ,cpf, pais, graduado, num_filhos)
+VALUES
+('julia', 01232454676, 'Argentina', 'sim', -2);
