@@ -1,0 +1,224 @@
+
+CREATE DATABASE banco_haylabank;
+USE banco_haylabank;
+ 
+ 
+CREATE TABLE categoria_cliente(
+cod_clientecategoria INT NOT NULL AUTO_INCREMENT,
+nom_categoria_cliente VARCHAR(100) NOT NULL,
+PRIMARY KEY(cod_clientecategoria)
+);
+
+CREATE TABLE agencia(
+num_agencia INT NOT NULL AUTO_INCREMENT,
+nom_agencia VARCHAR(100) NOT NULL,
+PRIMARY KEY(num_agencia)
+);
+
+CREATE TABLE tipo_conta(
+cod_tipo_conta INT NOT NULL AUTO_INCREMENT,
+des_tipo_conta VARCHAR(100) NOT NULL,
+PRIMARY KEY(cod_tipo_conta)
+);
+CREATE TABLE conta(
+num_conta INT NOT NULL AUTO_INCREMENT,
+val_salto DECIMAL NOT NULL,
+PRIMARY KEY(num_conta)
+);
+
+CREATE TABLE cliente(
+cod_cliente INT NOT NULL AUTO_INCREMENT,
+nom_cliente VARCHAR (100)NOT NULL,
+num_cpf_cnpj BIGINT(14) NOT NULL,
+num_celular VARCHAR(20)NOT NULL,
+nom_rua VARCHAR (100) NOT NULL,
+numero INT NOT NULL,
+bairro VARCHAR(45) NOT NULL,
+num_cep INT NOT NULL,
+nom_cidade VARCHAR(45) NOT NULL,
+nom_estado VARCHAR(45) NOT NULL,
+PRIMARY KEY (cod_cliente)
+);
+
+
+/*adicionar chave estrangeira*/
+ALTER TABLE cliente
+ADD COLUMN clientecategoria_cod INT,
+ADD FOREIGN KEY (clientecategoria_cod)
+REFERENCES categoria_cliente (cod_clientecategoria);
+
+ALTER TABLE conta
+ADD COLUMN tipo_conta_cod INT,
+ADD FOREIGN KEY (tipo_conta_cod)
+REFERENCES tipo_conta(cod_tipo_conta);
+
+ALTER TABLE conta
+ADD COLUMN cliente_cod INT,
+ADD FOREIGN KEY (cliente_cod)
+REFERENCES cliente(cod_cliente);
+
+ALTER TABLE conta
+ADD COLUMN agencia_num INT,
+ADD FOREIGN KEY (agencia_num)
+REFERENCES agencia(num_agencia);
+
+
+/* tabela cliente alterar o nome coluna NUM_CELULAR para TELEFONE*/
+ALTER TABLE cliente
+RENAME COLUMN num_celular TO telefone;
+
+/*incluir campo observação na tabala categoria_cliente "observação"(text)*/
+ALTER TABLE categoria_cliente
+ADD COLUMN observacao TEXT;
+
+/*adicionar campo/coluna 'renda' (decimal)*/
+ALTER TABLE cliente
+ADD COLUMN renda DECIMAL;
+
+/* alterar o tipo da coluna des_tipo_conta para TEXT*/
+ALTER TABLE tipo_conta
+MODIFY COLUMN des_tipo_conta TEXT;
+
+/*alterar na tabela agencia o nom_agencia para VARCHAR(45)*/
+ALTER TABLE agencia
+MODIFY COLUMN nom_agencia VARCHAR(45);
+
+/*remover a coluna estado na tabela cliente*/
+ALTER TABLE cliente
+DROP COLUMN nom_estado;
+
+/*Alterar o nome da tabela CATEGORIA_CLIENTE para CATEGORIA*/
+ALTER TABLE categoria_cliente
+RENAME TO categoria;
+
+/*– Na tabela Tipo_Conta vamos incluir o campo “OBSERVACAO” (TEXT)*/
+ALTER TABLE tipo_conta
+ADD COLUMN observacao TEXT;
+
+/*AULA DE INSERT
+     
+insira 4 categorias cliente(private,exclusive, gold, basico)     */
+INSERT INTO categoria
+(nom_categoria_cliente, observacao)
+VALUES
+( 'private' ,'cliente com renda acima de 1 milhão'), 
+('Exuclusive', 'clientes com renda acima de 500 mil'),
+('Gold', 'clientes com renda acima de 100 mil'),
+('Basico','clientes que tem renda abaixo de 100 mil');
+
+/* inspecionar a tabela */
+ SELECT * FROM cliente;
+
+/*  insira 3 agencias  */
+INSERT INTO agencia
+( nom_agencia)
+VALUES
+( 'campeche'), 
+( 'ingleses'), 
+( 'centro');
+
+
+/* insira 2 tipos de conta (poupança ou corrente)*/
+INSERT INTO tipo_conta
+( des_tipo_conta,observacao)
+VALUES
+( 'Poupança', 'podendo ser Conta-salário'), 
+( 'corrente', 'não precisa de comprovante de renda');
+
+
+/* insira 8 tipos clientes na tabela cliente */
+INSERT INTO cliente
+( nom_cliente, num_cpf_cnpj, telefone, nom_rua, numero, bairro , num_cep, nom_cidade, clientecategoria_cod, renda)
+VALUES
+( 'tati', 15935736954, '963852741', 'rua do pirata', 71, 'cachoeira', 88058655, 'floripa', 1, 500000000), 
+( 'carlos', 25935736954, '963852742', 'rua do pirata', 71, 'cachoeira', 88058655, 'floripa', 2, 250010000), 
+( 'agustin', 35935736954, '963852743', 'rua do pirata', 71, 'cachoeira', 88058655, 'floripa', 1, 100000050), 
+( 'thayla', 45935736954, '963852744', 'rua do pirata', 71, 'cachoeira', 88058655, 'floripa', 4, 2719890), 
+( 'cirlei', 55935736954, '963852745', 'rua do pirata', 71, 'cachoeira', 88058655, 'floripa', 3, 120000), 
+( 'erike', 65935736954, '963852746', 'rua do pirata', 71, 'cachoeira', 88058655, 'floripa', 4, 90000), 
+( 'leandro', 75935736954, '963852747', 'rua do pirata', 71, 'cachoeira', 88058655, 'floripa', 2, 530020000), 
+( 'teresa', 85935736954, '963852748', 'rua do pirata', 71, 'cachoeira', 88058655, 'floripa', 3, 130000);
+
+
+/* insira 1 conta para cada cliente */
+INSERT INTO conta
+( val_salto,tipo_conta_cod, cliente_cod, agencia_num)
+VALUES
+(500000000, 1,1,1),
+(250010000, 1,2,3),
+(100000050, 1,3,2),
+(2719890, 1,4,2),
+(120000, 1,5,2),
+(90000, 1,6,1),
+(530020000, 1,7,3),
+(130000, 1,8,3);
+
+
+/*aula 16/09*/
+/*adicionar coluna email na tebela cliente*/
+ALTER TABLE cliente
+ADD COLUMN email VARCHAR(45);
+
+/*inserir os seguintes clientes a tabela*/
+INSERT INTO cliente
+( nom_cliente, num_cpf_cnpj, telefone, nom_rua, numero, bairro , num_cep, nom_cidade, clientecategoria_cod, renda,email)
+VALUES
+('neymar',95935836953,1111111111,'rua do pirata',71,'cachoeira',88058655,'floripa',2,280010000,'neymar@gmail.com'),
+('coutinho',95938246953,1111112222,'rua do pirata',71,'cachoeira',88058655,'floripa',1,500000050,'coutinho@gmail.com'),
+('casemiro',95938243159,1111113333,'rua do pirata',71,'cachoeira',88058655,'floripa',3,125000,'casemiro@gmail.com'),
+('hebe',95938243159,1111117777,'rua do pirata',71,'cachoeira',88058655,'floripa',4,2719870,'hebe@gmail.com');
+
+/* UPDATE atualizar
+SET colocar
+WHERE onde 
+UPDATE cliente
+SET nome = 'Neymar Silva'
+WHERE clientecategoria_cod*/
+
+UPDATE cliente
+SET telefone = '4899999999'
+WHERE cod_cliente = 9;
+
+
+UPDATE cliente
+SET nom_cidade = 'Florianópolis SC'
+WHERE cod_cliente = 9;
+
+UPDATE categoria
+SET nom_categoria_cliente = 'personnalite'
+WHERE cod_clientecategoria = 1;
+
+
+UPDATE categoria
+SET nom_categoria_cliente = 'Gold'
+WHERE cod_clientecategoria = 4;
+
+ DELETE FROM CLIENTE
+ WHERE cod_cliente = 2;
+
+
+/* DELETE= para coisas pequenas 
+DROP = Para coisas grandes */
+
+ /* vamos mudar  todos os clientes com conta tipo 2 para apagar o tipo da conta depois*/
+UPDATE cliente
+SET clientecategoria_cod ='3'
+WHERE cod_cliente = 2;
+ 
+ 
+UPDATE cliente
+SET clientecategoria_cod ='3'
+WHERE cod_cliente = 7;
+ 
+ UPDATE cliente
+SET clientecategoria_cod ='3'
+WHERE cod_cliente = 9;
+
+ 
+ /*excluir a cliente HEBE do banco de dados*/
+ DELETE FROM CLIENTE
+ WHERE cod_cliente = 12;
+ 
+ 
+ /* inspecionar a tabela */
+ SELECT * FROM cliente;
