@@ -1,0 +1,143 @@
+CREATE DATABASE livraria2;
+USE livraria2;
+/*Utilizando Constrainsts*/
+
+CREATE TABLE pedido(
+id_pedido INT NOT NULL AUTO_INCREMENT,
+qtd_pedido INT NOT NULL,
+PRIMARY KEY(id_pedido)
+);
+
+/*na tabela cliente vamos utilizar NOT NULL para o nome não ficar vazio, UNIQUE PARA CPF, DEFAULT  para pais BRASIL*/
+CREATE TABLE cliente(
+id_cliente INT NOT NULL AUTO_INCREMENT,
+nome_cliente VARCHAR(45) NOT NULL,
+rg_cliente BIGINT NOT NULL,
+cpf_cliente BIGINT UNIQUE,
+rua VARCHAR(45) NOT NULL,
+numero_endereco INT NOT NULL,
+bairro VARCHAR(45) NOT NULL,
+cep INT NOT NULL,
+pais VARCHAR(45) DEFAULT 'Brasil' ,
+estado VARCHAR(45) NOT NULL,
+CHECK (qtd_pedidos >=0),
+PRIMARY KEY(id_cliente)
+);
+
+CREATE TABLE livro(
+id_livro INT NOT NULL AUTO_INCREMENT,
+isbn_livro BIGINT NOT NULL,
+titulo_livro VARCHAR(45) NOT NULL,
+preco_livro DECIMAL(8,2) NOT NULL,
+categoria_livro ENUM('Ficção fantástica', 'Romance', 'Ficção Científica'),
+PRIMARY KEY(id_livro)
+);
+
+/*o nomeFantasia_editora vai ser ENUM (EDITORA A, EDITORA B, EDITORA C)'*/
+CREATE TABLE editora(
+  id_editora INT NOT NULL AUTO_INCREMENT,
+  nomeFantasia_editora ENUM('EDITORA A', 'EDITORA B', 'EDITORA C'),
+  razaoSocial_editora VARCHAR(45) NOT NULL,
+  telefone_editora BIGINT NOT NULL,
+  rua VARCHAR(45) NOT NULL,
+  numero_endereco_editora INT NOT NULL,
+  bairro VARCHAR(45) NOT NULL,
+  pais VARCHAR(45) DEFAULT 'Brasil',  
+  estado VARCHAR(45) NOT NULL,
+  PRIMARY KEY(id_editora)
+);
+
+
+CREATE TABLE autor(
+id_autor INT NOT NULL AUTO_INCREMENT,
+nome_autor VARCHAR(45) NOT NULL,
+rg_autor BIGINT NOT NULL,
+PRIMARY KEY(id_autor)
+);
+
+/*Na tabela financiador o nome do financiador DEFAUL será financiador público*/
+CREATE TABLE financiador(
+id_financiador INT NOT NULL AUTO_INCREMENT,
+nome_financiador VARCHAR(45) DEFAULT 'Financiador Público',
+cnpj_financiador VARCHAR(18) NOT NULL,
+PRIMARY KEY(id_financiador)
+);
+
+ALTER TABLE pedido
+ADD COLUMN id_cliente INT,
+ADD FOREIGN KEY (id_cliente)
+REFERENCES cliente(id_cliente);
+
+ALTER TABLE pedido
+ADD COLUMN id_livro INT,
+ADD FOREIGN KEY (id_livro)
+REFERENCES livro(id_livro);
+
+ALTER TABLE livro
+ADD COLUMN id_editora INT,
+ADD FOREIGN KEY (id_editora)
+REFERENCES editora(id_editora);
+
+ALTER TABLE livro
+ADD COLUMN id_autor INT,
+ADD FOREIGN KEY (id_autor)
+REFERENCES autor(id_autor);
+
+ALTER TABLE livro
+ADD COLUMN id_financiador INT,
+ADD FOREIGN KEY (id_financiador)
+REFERENCES financiador(id_financiador);
+
+USE livraria2;
+
+INSERT INTO autor
+(id_autor, nome_autor, rg_autor)
+VALUES
+(1,'Jorge Luis Borges','5544333'),
+(2,'Julio Cortázar','2332112'),
+(3,'Adolfo Bioy Casares ','8999536');
+SELECT * FROM autor;
+
+INSERT INTO financiador 
+(cnpj_financiador)
+VALUES 
+('14326536787625'),
+('26378426734651'),
+('23652819387652');
+
+SELECT * FROM financiador;
+
+
+
+INSERT INTO editora
+(nomeFantasia_editora, razaoSocial_editora, telefone_editora,rua,numero_endereco_editora,bairro, pais)
+VALUES
+( 'A ', 'Palavras Infinita Editora Ltda',4898494513, 'Rua Gécio de Souza e Silva',6790, 'Sambaqui', 88023400,''),
+('B', 'Luz & Sombras Publicações S.A',48988674564, 'Rua dos Búzios',1600, 'Jurere', 88059300, ''),
+('C','Horizonte Literário Edições ME.',48987675674,'Rua apostolo Paschoal',15,'Cannasvieiras',88098900, '');
+SELECT * FROM editora;
+
+/*O preço do livro não pode ser menor que ZERO. Utilizar CHECK*/
+INSERT INTO livro 
+(id_livro, isbn_livro, titulo_livro, preco_livro, categoria_livro, id_editora, id_financiador, id_autor)
+VALUES
+(1, '9780307950926', 'Ficciones', '', 'Ficção fantástica', 3, 1, 1),
+('2', '7867665787656', 'Rayuela', '', 'Romance', 2, 3, 2),
+(3, '6567876545678', 'La invención de Morel', '', 'Ficção científica',1,2,3);
+SELECT * FROM livro;
+
+INSERT INTO cliente
+(id_cliente,qtd_pedidos,nome_cliente, rg_cliente, cpf_cliente, rua, numero_endereco, bairro, cep, pais, estado)
+VALUES
+(1,20, 'Agustin Emnuel Fernandez', '654567687', '65567654879', 'Gilson da costa Javier', '124', 'Smbaqui', '88051200','Brasil', 'SC'),
+(2,14, 'Rocio Marisol sanchez', '980789786', '98908795432', 'Rua das Moreias', '1234', 'Jurere', '88045654''Brasil', 'SC'),
+(3,23, 'Paula Korina', '563232123', '34325676565', 'Rua tortuliano', '34', 'Canasvieiras', '88234300''Brasil', 'SC');
+SELECT * FROM cliente;
+
+INSERT INTO pedido
+(id_pedido, qtd_pedido, id_cliente,id_livro)
+VALUES
+(1, 20, 3,1 ),
+(2, 14, 1, 2),
+(3, 23, 2,3 );
+SELECT * FROM pedido;
